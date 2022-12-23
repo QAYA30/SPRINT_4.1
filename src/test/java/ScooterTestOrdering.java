@@ -16,26 +16,27 @@ public class ScooterTestOrdering {
 
     WebDriver driver = new ChromeDriver();
 
-    final By buttonAddress;
-    final String name;
-    final String family;
-    final String address;
-    final String numberPhone;
-    final String comment;
 
-    public ScooterTestOrdering(By buttonAddress, String name, String family, String address, String numberPhone, String comment) {
-        this.buttonAddress = buttonAddress;
+    final String name;
+    final String surname;
+    final String address;
+    final String phone;
+    final String comment;
+    private final int typeButton;
+
+    public ScooterTestOrdering(String name, String surname, String address, String phone, String comment, int typeButton) {
         this.name = name;
-        this.family = family;
+        this.surname = surname;
         this.address = address;
-        this.numberPhone = numberPhone;
+        this.phone = phone;
         this.comment = comment;
+        this.typeButton = typeButton;
     }
     @Parameterized.Parameters
     public static Object[][] Parameters() {
         return new Object[][] {
-                {cssSelector("div.Header_Nav__AGCXC > button.Button_Button__ra12g"), "Иванов", "Александр", "Москва Волгоградский проспект дом 32 квартира 19", "89955306411", "Позвонить за час до доставки"},
-                {cssSelector("div.Home_RoadMap__2tal_ > div.Home_FinishButton__1_cWm > button"), "Иванов", "Александр", "Москва Волгоградский проспект дом 32 квартира 19", "89955306411", "Позвонить за час до доставки"}
+                {"Осипов", "Дмитрий", "Щелково Пролетарский проспект дом 3 квартира 159", "89250914255", "Позвонить за час до доставки",1},
+                {"Осипов", "Дмитрий", "Щелково Пролетарский проспект дом 3 квартира 159", "89250914255", "Позвонить за час до доставки",2}
         };
     }
     @Test
@@ -43,21 +44,9 @@ public class ScooterTestOrdering {
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         ScooterOrderPage scooterOrderPagePage = new ScooterOrderPage(driver);
         scooterOrderPagePage.startPage();
-        scooterOrderPagePage.findCheckAndClickOrderButton(buttonAddress);
-        scooterOrderPagePage.userName(name);
-        scooterOrderPagePage.userSurname(family);
-        scooterOrderPagePage.userAddress(address);
-        scooterOrderPagePage.userPhone(numberPhone);
-        scooterOrderPagePage.metroStation();
-        scooterOrderPagePage.metroStationChoice();
-        scooterOrderPagePage.nextPageButton();
-        scooterOrderPagePage.calendarDate();
-        scooterOrderPagePage.rentalDuration();
-        scooterOrderPagePage.scooterColour();
-        scooterOrderPagePage.userComment(comment);
-        scooterOrderPagePage.orderButton();
-        scooterOrderPagePage.confirmButton();
-        assertTrue("ERROR", scooterOrderPagePage.CreatedOrder());
+        scooterOrderPagePage.findCheckAndClickOrderButton(typeButton);
+        scooterOrderPagePage.enterValueOrder(name, surname, address, phone, comment);
+        assertTrue("ERROR", scooterOrderPagePage.createdOrder());
     }
 
     @After
